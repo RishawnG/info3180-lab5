@@ -27,11 +27,14 @@ def about():
     """Render the website's about page."""
     return render_template('about.html')
 
+@app.route('/secure_page')
+@login_required
+def secure_page():
+    return render_template('secure_page.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('secure-page'))
+    
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         # change this to actually validate the entire form submission
@@ -48,11 +51,11 @@ def login():
             # You will need to import the appropriate function to do so.
             # Then store the result of that query to a `user` variable so it can be
             # passed to the login_user() method below.
-
+            
             # get user id, load into session
                 login_user(user)
                 flash('Logged in successfully.', 'success')
-                return redirect(url_for('secure-page'))
+                return redirect(url_for('secure_page'))
         else:
             flash('Username or Password is incorrect.', 'danger')
             # remember to flash a message to the user
